@@ -35,7 +35,7 @@ Ajuste especialmente:
 
 ```bash
 sudo -u backup ssh-keygen -t ed25519 -f /home/backup/.ssh/id_ed25519 -N ""
-sudo -u backup ssh-copy-id backup@HOST_DA_NUVEM
+sudo -u backup ssh-copy-id backup@backup.example.com
 ```
 
 ## 5. Criar diretório remoto
@@ -43,9 +43,9 @@ sudo -u backup ssh-copy-id backup@HOST_DA_NUVEM
 No servidor de nuvem:
 
 ```bash
-mkdir -p /home/backup/NOME_DO_CLIENTE
-chown backup:backup /home/backup/NOME_DO_CLIENTE
-chmod 0750 /home/backup/NOME_DO_CLIENTE
+mkdir -p /home/backup/environment-example
+chown backup:backup /home/backup/environment-example
+chmod 0750 /home/backup/environment-example
 ```
 
 ## 6. Validar

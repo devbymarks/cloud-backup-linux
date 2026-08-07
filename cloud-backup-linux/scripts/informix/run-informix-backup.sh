@@ -17,6 +17,7 @@ fi
 
 : "${INFORMIX_USER:=informix}"
 : "${INFORMIX_BACKUP_DIR:?}"
+: "${INFORMIX_BACKUP_GLOB:=*_0_L0*}"
 
 ensure_dir "$INFORMIX_BACKUP_DIR" 0770
 chown "$INFORMIX_USER:$BACKUP_GROUP" "$INFORMIX_BACKUP_DIR"
@@ -25,7 +26,7 @@ log INFO "Iniciando rotina Informix"
 run_as_user "$INFORMIX_USER" "$SCRIPT_DIR/informix/create-informix-backup.sh"
 
 mapfile -t files < <(find "$INFORMIX_BACKUP_DIR" -maxdepth 1 -type f \( \
-  -name "${INFORMIX_BACKUP_PREFIX}_*" -o \
+  -name "$INFORMIX_BACKUP_GLOB" -o \
   -name "$INFORMIX_ONCONFIG" -o \
   -name "sqlhosts" -o \
   -name "database.txt" \

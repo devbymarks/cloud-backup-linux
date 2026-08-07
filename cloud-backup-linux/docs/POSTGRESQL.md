@@ -6,9 +6,9 @@ No arquivo `/etc/cloud-backup/backup.env`:
 
 ```bash
 POSTGRES_USER="postgres"
-POSTGRES_DB="bd_logus"
+POSTGRES_DB="example_database"
 POSTGRES_BACKUP_DIR="/opt/backup/postgres"
-POSTGRES_BACKUP_PREFIX="bkp_logus"
+POSTGRES_BACKUP_PREFIX="postgres_backup"
 POSTGRES_FORMAT="custom"
 ```
 

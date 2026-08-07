@@ -22,8 +22,11 @@ load_config() {
   : "${LOCK_ROOT:=/var/lock/cloud-backup}"
   : "${CLOUD_PORT:=22}"
   : "${SSH_CONNECT_TIMEOUT:=20}"
+  : "${SSH_STRICT_HOST_KEY_CHECKING:=yes}"
+  : "${SSH_KNOWN_HOSTS_FILE:=$BACKUP_HOME/.ssh/known_hosts}"
   : "${CLOUD_TRANSFER_METHOD:=rsync}"
   : "${VERIFY_REMOTE_AFTER_UPLOAD:=yes}"
+  : "${VERIFY_REMOTE_CHECKSUM:=yes}"
   : "${DELETE_LOCAL_AFTER_UPLOAD:=no}"
 }
 
@@ -76,5 +79,6 @@ ssh_base_args() {
     "-p" "$CLOUD_PORT" \
     "-o" "BatchMode=yes" \
     "-o" "ConnectTimeout=$SSH_CONNECT_TIMEOUT" \
-    "-o" "StrictHostKeyChecking=accept-new"
+    "-o" "StrictHostKeyChecking=$SSH_STRICT_HOST_KEY_CHECKING" \
+    "-o" "UserKnownHostsFile=$SSH_KNOWN_HOSTS_FILE"
 }

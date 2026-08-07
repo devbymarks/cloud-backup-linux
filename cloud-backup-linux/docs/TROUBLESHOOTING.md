@@ -3,7 +3,7 @@
 ## SSH pede senha
 
 ```bash
-sudo -u backup ssh -vvv backup@HOST
+sudo -u backup ssh -vvv backup@backup.example.com
 ```
 
 Confira:
@@ -43,7 +43,7 @@ chmod -R 0770 /opt/backup
 Teste como usuário postgres:
 
 ```bash
-sudo -u postgres pg_dump -Fc bd_logus >/tmp/teste.dump
+sudo -u postgres pg_dump -Fc example_database >/tmp/teste.dump
 ```
 
 Confira autenticação local no `pg_hba.conf`.

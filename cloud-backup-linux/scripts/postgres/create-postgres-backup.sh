@@ -8,7 +8,7 @@ load_config
 
 : "${POSTGRES_DB:?}"
 : "${POSTGRES_BACKUP_DIR:?}"
-: "${POSTGRES_BACKUP_PREFIX:=bkp_logus}"
+: "${POSTGRES_BACKUP_PREFIX:=postgres_backup}"
 : "${POSTGRES_FORMAT:=custom}"
 
 require_command pg_dump

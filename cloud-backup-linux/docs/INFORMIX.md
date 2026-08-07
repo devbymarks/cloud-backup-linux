@@ -5,7 +5,7 @@
 Edite o arquivo correspondente ao ambiente, por exemplo:
 
 ```bash
-vi /opt/IBM/informix/etc/onconfig.ol_matriz
+vi /opt/IBM/informix/etc/onconfig.ol_example
 ```
 
 Localize os parâmetros de fita e ajuste conforme a estrutura real:

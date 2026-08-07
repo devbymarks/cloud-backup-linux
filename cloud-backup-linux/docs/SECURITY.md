@@ -29,13 +29,15 @@ arquivos de backup      0640
 
 ## Host key
 
-O projeto usa `StrictHostKeyChecking=accept-new`. Em ambientes críticos, registre previamente a chave do host:
+O projeto usa `StrictHostKeyChecking=yes` por padrão. Antes da primeira conexão, obtenha a chave pública do host remoto e **confirme a fingerprint por um canal confiável** antes de registrá-la em `known_hosts`.
+
+Exemplo de coleta da chave, somente após validar a origem do host:
 
 ```bash
-sudo -u backup ssh-keyscan -p 22 HOST_DA_NUVEM >> /home/backup/.ssh/known_hosts
+sudo -u backup ssh-keyscan -p 22 backup.example.com >> /home/backup/.ssh/known_hosts
 ```
 
-Depois altere o script para `StrictHostKeyChecking=yes`.
+Não desabilite a validação de host apenas para contornar erros de conexão.
 
 ## Proteção adicional
 
@@ -44,3 +46,25 @@ Depois altere o script para `StrictHostKeyChecking=yes`.
 - Implemente retenção e cópias imutáveis no servidor remoto.
 - Monitore falhas do cron.
 - Teste restauração periodicamente.
+
+## Verificação de host SSH
+
+A configuração pública usa `SSH_STRICT_HOST_KEY_CHECKING="yes"`. Antes da primeira conexão, valide a fingerprint do servidor remoto por um canal confiável e registre a chave no arquivo `known_hosts` do usuário de backup.
+
+Evite desabilitar `StrictHostKeyChecking` em produção.
+
+## Integridade do arquivo transferido
+
+Quando `VERIFY_REMOTE_CHECKSUM="yes"`, o projeto calcula o SHA-256 do arquivo local e compara com o SHA-256 calculado no servidor remoto. A rotina falha se os valores forem diferentes.
+
+O servidor remoto precisa disponibilizar o comando `sha256sum` para essa validação.
+
+## Scan preventivo do repositório público
+
+O teste `tests/security-scan.sh` procura padrões comuns de publicação acidental de dados sensíveis, incluindo:
+
+- chaves privadas SSH;
+- atribuições explícitas de senha;
+- endereços IPv4 literais.
+
+Esse teste é uma barreira adicional e não substitui revisão humana, secret scanning do GitHub nem gestão adequada de segredos.
