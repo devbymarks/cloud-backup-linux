@@ -446,14 +446,6 @@ Projeto desenvolvido como parte de estudos e práticas de **Linux, Bash, Infraes
 
 ---
 
-## ⭐ Contribuição
-
-Sugestões, melhorias e contribuições são bem-vindas.
-
-Se você encontrar algum problema ou tiver uma ideia para melhorar o projeto, abra uma **Issue** ou envie um **Pull Request**.
-
----
-
 ## ⭐ Apoie o projeto
 
 Se este projeto foi útil para você, considere deixar uma ⭐ no repositório.
