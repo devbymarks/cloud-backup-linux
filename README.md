@@ -440,7 +440,7 @@ O projeto pode evoluir para incluir:
 
 ## 👨‍💻 Autor
 
-**Matheus Barcelli**
+**Matheus Marks**
 
 Projeto desenvolvido como parte de estudos e práticas de **Linux, Bash, Infraestrutura, Banco de Dados e Automação**.
 
