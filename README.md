@@ -1,274 +1,469 @@
-# Cloud Backup Linux
+# ☁️ Cloud Backup Linux
 
-## Sobre o projeto
+> Automação de backup para ambientes Linux com envio seguro para um servidor remoto utilizando **Bash, SSH e Rsync**.
 
-O **Cloud Backup Linux** é um projeto criado para automatizar o processo de backup de bancos de dados em servidores Linux e enviar esses arquivos com segurança para um servidor remoto.
+[![Shell Script](https://img.shields.io/badge/Shell-Bash-121011?logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
+[![Linux](https://img.shields.io/badge/OS-Linux-FCC624?logo=linux&logoColor=black)](https://www.linux.org/)
+[![Rsync](https://img.shields.io/badge/Transfer-Rsync-2E8B57)](https://rsync.samba.org/)
+[![SSH](https://img.shields.io/badge/Security-SSH-222222?logo=openssh&logoColor=white)](https://www.openssh.com/)
 
-A ideia surgiu a partir de uma necessidade real de infraestrutura: reduzir tarefas manuais, padronizar o processo de backup e diminuir o risco de falhas humanas.
+## 📌 Sobre o projeto
 
-O projeto foi desenvolvido e documentado por **Matheus Barcelli**.
+O **Cloud Backup Linux** é um conjunto de scripts Bash desenvolvido para automatizar o envio de backups de servidores Linux para um servidor remoto.
 
----
+O projeto foi pensado para ambientes que utilizam **Informix e/ou PostgreSQL**, oferecendo rotinas independentes para diferentes cenários:
 
-## O que esse projeto faz?
+- backup somente Informix;
+- backup Informix + PostgreSQL;
+- backup somente PostgreSQL.
 
-De forma simples, o sistema executa quatro etapas:
+Além do envio, o projeto possui validação do arquivo transferido e política de retenção para evitar o acúmulo de backups antigos.
 
-1. Gera uma cópia de segurança do banco de dados.
-2. Organiza os arquivos de backup.
-3. Envia os arquivos para outro servidor através de uma conexão segura.
-4. Registra informações da execução para facilitar validações e troubleshooting.
-
-O projeto possui suporte para ambientes com:
-
-* PostgreSQL
-* Informix
-* Linux
-* SSH
-* Rsync
-* Shell Script
-* Cron
+> **Importante:** este repositório não contém dados reais de clientes, endereços IP de produção, credenciais, chaves SSH ou informações sensíveis. Todas as configurações são exemplos genéricos.
 
 ---
 
-## Por que esse projeto é importante?
+## 🎯 Objetivos
 
-Em empresas, bancos de dados armazenam informações essenciais para a operação.
+O projeto busca:
 
-Caso um servidor tenha uma falha, arquivos sejam corrompidos ou dados sejam perdidos, um backup confiável pode ser utilizado para recuperar o ambiente.
-
-O objetivo deste projeto é tornar esse processo mais automatizado e organizado.
-
-Em vez de depender de uma pessoa realizando os mesmos comandos manualmente todos os dias, o servidor pode executar as rotinas automaticamente nos horários configurados.
+- automatizar o envio de backups;
+- reduzir tarefas manuais de administração;
+- utilizar SSH para comunicação segura;
+- utilizar Rsync para transferência eficiente;
+- validar o backup após a transferência;
+- evitar exclusão prematura de backups;
+- controlar a retenção de arquivos antigos;
+- centralizar funções comuns em uma biblioteca Bash;
+- facilitar a implantação em diferentes servidores e clientes.
 
 ---
 
-## Exemplo simples
-
-Imagine uma empresa que possui um banco de dados em um servidor.
-
-Sem automação, um profissional poderia precisar:
-
-* acessar o servidor;
-* gerar o backup;
-* localizar o arquivo;
-* conectar em outro servidor;
-* copiar o backup;
-* verificar se a transferência funcionou.
-
-Com este projeto, essas etapas podem ser executadas automaticamente.
-
-O fluxo é aproximadamente:
+## 🏗️ Arquitetura
 
 ```text
-Banco de Dados
-      |
-      v
-Geração do Backup
-      |
-      v
-Arquivo de Backup
-      |
-      v
-Transferência Segura
-      |
-      v
+Servidor Linux
+│
+├── /opt/backup
+│   ├── server-bd_0_L0*
+│   ├── bkp_logus*
+│   ├── database
+│   ├── sqlhosts
+│   └── onconfig.ol_matriz
+│
+│
+└── Cloud Backup
+        │
+        │ SSH + Rsync
+        ▼
 Servidor de Backup
+│
+└── /backup/clientes/<cliente>
+    ├── backup Informix
+    ├── backup PostgreSQL
+    ├── database
+    ├── sqlhosts
+    └── onconfig.ol_matriz
 ```
 
 ---
 
-## Tecnologias utilizadas
-
-### Linux
-
-O projeto foi desenvolvido para ambientes Linux, sistema operacional muito utilizado em servidores e infraestrutura corporativa.
-
-### Bash / Shell Script
-
-Os scripts automatizam tarefas que normalmente seriam realizadas manualmente por um administrador de sistemas.
-
-### PostgreSQL
-
-Banco de dados amplamente utilizado em aplicações corporativas.
-
-O projeto utiliza ferramentas do próprio PostgreSQL para gerar os backups.
-
-### Informix
-
-Também possui suporte para rotinas de backup em ambientes IBM Informix.
-
-### SSH
-
-O SSH permite que servidores se comuniquem de forma segura.
-
-Neste projeto, ele é utilizado para autenticação entre o servidor que gera o backup e o servidor que irá armazená-lo.
-
-### Rsync / SCP
-
-Ferramentas utilizadas para transferir arquivos entre servidores Linux.
-
-### Cron
-
-O Cron permite programar tarefas automáticas.
-
-Por exemplo:
-
-```text
-22:00 -> Backup Informix
-01:00 -> Backup PostgreSQL
-```
-
-Assim, os backups podem ser realizados todos os dias sem intervenção manual.
-
----
-
-## Segurança
-
-Por se tratar de um projeto público de portfólio, nenhuma informação real de ambiente corporativo foi publicada.
-
-O repositório não contém:
-
-* senhas reais;
-* IPs reais;
-* nomes de clientes;
-* chaves SSH privadas;
-* credenciais de produção;
-* caminhos específicos de empresas.
-
-As configurações sensíveis são tratadas através de arquivos de exemplo e variáveis.
-
----
-
-## Validação dos backups
-
-Além de gerar e transferir os arquivos, o projeto possui recursos para ajudar a verificar se o processo ocorreu corretamente.
-
-Entre eles:
-
-* logs de execução;
-* validação de conexão;
-* verificação dos arquivos;
-* checksum SHA-256;
-* prevenção de execuções duplicadas.
-
-O checksum funciona como uma espécie de "impressão digital" do arquivo.
-
-Ele ajuda a confirmar que o backup enviado para outro servidor é igual ao arquivo original.
-
----
-
-## Estrutura do projeto
+## 📂 Estrutura do projeto
 
 ```text
 cloud-backup-linux/
 │
-├── README.md
-├── LICENSE
-├── NOTICE
-├── AUTHORS.md
-├── CHANGELOG.md
-│
 ├── config/
 │   └── backup.env.example
 │
+├── cron/
+│   └── backup.cron.example
+│
 ├── docs/
-│   ├── architecture.md
-│   ├── installation.md
-│   ├── security.md
-│   ├── restore-testing.md
-│   └── troubleshooting.md
+│   └── BACKUP-ROUTINES.md
 │
 ├── scripts/
-│   ├── install.sh
-│   ├── validate.sh
-│   ├── upload.sh
+│   ├── backup/
+│   │   ├── backup-informix.sh
+│   │   ├── backup-informix-postgres.sh
+│   │   └── backup-postgres.sh
 │   │
-│   ├── informix/
-│   └── postgres/
+│   └── lib/
+│       └── common.sh
 │
-├── cron/
-│
-└── .github/
-    └── workflows/
+├── README.md
+└── LICENSE
 ```
 
-A separação por diretórios facilita a manutenção e permite que outras pessoas entendam rapidamente onde estão os scripts, configurações e documentação.
-
 ---
 
-## O que este projeto demonstra
+## ⚙️ Rotinas disponíveis
 
-Este projeto foi criado para demonstrar conhecimentos práticos relacionados a infraestrutura e administração de servidores.
+### 🔵 Somente Informix
 
-Entre as competências aplicadas estão:
+```bash
+backup-informix.sh
+```
 
-* Administração Linux
-* Automação de tarefas
-* Shell Script
-* Backup de banco de dados
-* PostgreSQL
-* Informix
-* SSH
-* Rsync
-* Segurança básica de infraestrutura
-* Troubleshooting
-* Documentação técnica
-* Git e GitHub
-* GitHub Actions
-* Boas práticas de organização de projetos
+Responsável por:
 
----
+- localizar o backup Informix mais recente;
+- transferir o arquivo para o servidor remoto;
+- transferir arquivos auxiliares;
+- validar a transferência;
+- remover versões antigas conforme a política de retenção.
 
-## Cenário de uso
-
-Um possível cenário seria:
+Arquivos auxiliares utilizados como exemplo:
 
 ```text
-Servidor da Aplicação
-        |
-        |
-Servidor de Banco de Dados
-        |
-        | gera backup
-        v
-Diretório Local de Backup
-        |
-        | SSH / Rsync
-        v
-Servidor Remoto de Backup
+database
+sqlhosts
+onconfig.ol_matriz
 ```
 
-Caso ocorra um problema no servidor principal, os arquivos armazenados no servidor remoto podem fazer parte do processo de recuperação.
+---
+
+### 🟢 Informix + PostgreSQL
+
+```bash
+backup-informix-postgres.sh
+```
+
+Executa o fluxo para os dois bancos:
+
+```text
+Informix
+   +
+PostgreSQL
+```
+
+Os backups são enviados e validados individualmente antes da limpeza das versões antigas.
 
 ---
 
-## Motivação
+### 🟠 Somente PostgreSQL
 
-Este projeto nasceu a partir de uma documentação operacional criada para configurar rotinas de backup em servidores Linux.
+```bash
+backup-postgres.sh
+```
 
-A documentação foi posteriormente organizada e transformada em um projeto de portfólio, com foco em:
+Responsável por:
 
-* automação;
-* segurança;
-* padronização;
-* documentação;
-* facilidade de manutenção.
-
----
-
-## Objetivo profissional
-
-O objetivo deste repositório é demonstrar experiência prática com atividades comuns em ambientes de infraestrutura, Cloud, DevOps e administração de sistemas.
-
-O projeto procura mostrar não apenas a execução de comandos Linux, mas também a capacidade de transformar uma rotina operacional em uma solução organizada, documentada e reutilizável.
+- localizar o backup PostgreSQL mais recente;
+- transferir o arquivo;
+- validar a transferência;
+- aplicar a política de retenção.
 
 ---
 
-## Autor
+## 🔐 Validação do backup
+
+Uma das principais características do projeto é que a limpeza dos arquivos antigos **não ocorre imediatamente após o `rsync`**.
+
+O fluxo é:
+
+```text
+Localiza backup
+      │
+      ▼
+Transfere com Rsync
+      │
+      ▼
+Confere tamanho
+      │
+      ▼
+Confere SHA-256
+      │
+      ▼
+Backup validado
+      │
+      ▼
+Remove versões antigas
+```
+
+Isso reduz o risco de perder a última cópia válida caso uma transferência apresente problema.
+
+---
+
+## 🔄 Rsync
+
+A transferência utiliza:
+
+```bash
+rsync -az -e ssh
+```
+
+Benefícios:
+
+- transferência incremental;
+- compressão durante o envio;
+- preservação de dados;
+- utilização do SSH;
+- bom desempenho para arquivos grandes.
+
+---
+
+## 🔑 SSH
+
+A comunicação com o servidor remoto utiliza SSH.
+
+Recomenda-se configurar autenticação por chave:
+
+```text
+Servidor de origem
+        │
+        │ SSH
+        ▼
+Servidor de backup
+```
+
+O projeto não armazena senhas ou chaves privadas no repositório.
+
+---
+
+## 🗂️ Configuração
+
+A configuração deve ser feita fora do código-fonte.
+
+Utilize como base:
+
+```text
+config/backup.env.example
+```
+
+Exemplo:
+
+```bash
+CLOUD_HOST="backup.example.com"
+CLOUD_PORT="22"
+CLOUD_USER="backup"
+
+CLOUD_BASE_DIR="/backup/clientes"
+CLOUD_CLIENT_DIR="cliente_exemplo"
+
+BACKUP_ROOT="/opt/backup"
+
+INFORMIX_BACKUP_PATTERN="server-bd_0_L0*"
+POSTGRES_BACKUP_PATTERN="bkp_logus*"
+
+VERIFY_REMOTE_CHECKSUM="yes"
+```
+
+### ⚠️ Nunca publique
+
+Não coloque no Git:
+
+```text
+❌ senhas
+❌ chaves privadas SSH
+❌ IPs de produção
+❌ domínios internos
+❌ nomes reais de clientes
+❌ arquivos de backup
+❌ arquivos de configuração de produção
+❌ tokens
+❌ credenciais
+```
+
+---
+
+## ⏰ Agendamento com Cron
+
+As rotinas podem ser executadas automaticamente pelo `cron`.
+
+Exemplo:
+
+```cron
+00 22 * * * root /opt/cloud-backup/scripts/backup/backup-informix.sh
+```
+
+Ou:
+
+```cron
+00 01 * * * root /opt/cloud-backup/scripts/backup/backup-postgres.sh
+```
+
+O arquivo:
+
+```text
+cron/backup.cron.example
+```
+
+contém exemplos de agendamento.
+
+---
+
+## 🧹 Política de retenção
+
+Depois que o novo backup é transferido e validado, o projeto pode remover versões antigas.
+
+Exemplo:
+
+```text
+Servidor remoto
+
+backup_01
+backup_02
+backup_03  ← novo backup validado
+
+        ↓
+
+backup_03  ← mantido
+```
+
+A retenção pode ser ajustada de acordo com a necessidade do ambiente.
+
+---
+
+## 🛡️ Tratamento de erros
+
+Os scripts utilizam:
+
+```bash
+set -Eeuo pipefail
+```
+
+Isso ajuda a identificar situações como:
+
+- variável inexistente;
+- comando com erro;
+- arquivo não encontrado;
+- falha no SSH;
+- falha no Rsync;
+- erro na validação;
+- falha na comunicação com o servidor remoto.
+
+---
+
+## 🧰 Tecnologias utilizadas
+
+| Tecnologia | Utilização |
+|---|---|
+| Bash | Automação |
+| Linux | Sistema operacional |
+| SSH | Comunicação segura |
+| Rsync | Transferência |
+| SHA-256 | Validação |
+| Cron | Agendamento |
+| Informix | Banco de dados |
+| PostgreSQL | Banco de dados |
+
+---
+
+## 🚀 Instalação
+
+Clone o projeto:
+
+```bash
+git clone https://github.com/SEU-USUARIO/cloud-backup-linux.git
+cd cloud-backup-linux
+```
+
+Copie o exemplo de configuração:
+
+```bash
+sudo mkdir -p /etc/cloud-backup
+sudo cp config/backup.env.example /etc/cloud-backup/backup.env
+```
+
+Edite:
+
+```bash
+sudo nano /etc/cloud-backup/backup.env
+```
+
+Configure as informações do seu ambiente.
+
+Depois, dê permissão de execução:
+
+```bash
+sudo chmod +x scripts/backup/*.sh
+sudo chmod +x scripts/lib/common.sh
+```
+
+---
+
+## 🧪 Teste
+
+Antes de colocar no `cron`, execute manualmente:
+
+```bash
+sudo /opt/cloud-backup/scripts/backup/backup-informix.sh
+```
+
+Para Informix + PostgreSQL:
+
+```bash
+sudo /opt/cloud-backup/scripts/backup/backup-informix-postgres.sh
+```
+
+Para PostgreSQL:
+
+```bash
+sudo /opt/cloud-backup/scripts/backup/backup-postgres.sh
+```
+
+---
+
+## 📋 Boas práticas
+
+Para ambientes de produção:
+
+1. utilizar autenticação SSH por chave;
+2. manter `StrictHostKeyChecking` habilitado;
+3. não armazenar credenciais no Git;
+4. testar restauração periodicamente;
+5. monitorar espaço em disco;
+6. manter logs das execuções;
+7. validar os backups antes da retenção;
+8. manter mais de uma cópia quando a política de recuperação exigir;
+9. testar os scripts antes de adicioná-los ao `cron`.
+
+---
+
+## 📈 Possíveis evoluções
+
+O projeto pode evoluir para incluir:
+
+- monitoramento centralizado;
+- alertas por e-mail;
+- integração com Telegram ou WhatsApp;
+- dashboard de backups;
+- retenção por quantidade de dias;
+- retenção diária/semanal/mensal;
+- logs centralizados;
+- relatório de sucesso e falha;
+- monitoramento de espaço em disco;
+- verificação automática de restauração.
+
+---
+
+## 👨‍💻 Autor
 
 **Matheus Barcelli**
 
-Projeto, documentação e implementação desenvolvidos como parte de portfólio profissional na área de tecnologia e infraestrutura.
+Projeto desenvolvido como parte de estudos e práticas de **Linux, Bash, Infraestrutura, Banco de Dados e Automação**.
 
-Copyright © 2026 Matheus Barcelli.
+---
+
+## ⭐ Contribuição
+
+Sugestões, melhorias e contribuições são bem-vindas.
+
+Se você encontrar algum problema ou tiver uma ideia para melhorar o projeto, abra uma **Issue** ou envie um **Pull Request**.
+
+---
+
+## ⭐ Apoie o projeto
+
+Se este projeto foi útil para você, considere deixar uma ⭐ no repositório.
+
+---
+
+## 📄 Licença
+
+Este projeto está disponível sob a licença definida no arquivo:
+
+```text
+LICENSE
+```

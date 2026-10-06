@@ -1,0 +1,8 @@
+# Informix somente
+00 22 * * * root /opt/cloud-backup/scripts/backup/backup-informix.sh
+
+# Informix + PostgreSQL
+#00 22 * * * root /opt/cloud-backup/scripts/backup/backup-informix-postgres.sh
+
+# PostgreSQL somente
+#00 01 * * * root /opt/cloud-backup/scripts/backup/backup-postgres.sh
