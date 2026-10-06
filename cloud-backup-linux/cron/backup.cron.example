@@ -1,8 +1,0 @@
-SHELL=/bin/bash
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-# Backup Informix todos os dias às 22:00
-00 22 * * * root /usr/local/sbin/cloud-backup-informix
-
-# Backup PostgreSQL todos os dias à 01:00
-00 01 * * * root /usr/local/sbin/cloud-backup-postgres
