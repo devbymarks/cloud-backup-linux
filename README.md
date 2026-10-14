@@ -442,7 +442,9 @@ O projeto pode evoluir para incluir:
 
 **Matheus Marks**
 
-Projeto desenvolvido como parte de estudos e práticas de **Linux, Bash, Infraestrutura, Banco de Dados e Automação**.
+Projeto desenvolvido e utilizado em ambiente real de trabalho para automatizar e gerenciar rotinas de **backup e transferência de arquivos para servidores em nuvem**, utilizando Linux, Bash, SSH e Rsync.
+
+A solução foi criada para otimizar processos operacionais, padronizar as rotinas de backup, garantir a integridade dos arquivos transferidos e facilitar a administração da infraestrutura, incluindo a validação dos backups e a remoção segura de versões antigas após a confirmação da transferência.
 
 ---
 
